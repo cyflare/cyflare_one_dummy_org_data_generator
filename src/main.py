@@ -60,8 +60,6 @@ class Runner:
 
 
 if __name__ == "__main__":
-    START_TIME_FORMAT = "%Y%m%d-%H%M"
-
     parser = argparse.ArgumentParser(
         description="A terminal client to interact with the demo data generator."
     )
