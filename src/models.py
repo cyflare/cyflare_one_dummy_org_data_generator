@@ -1,15 +1,13 @@
-import logging
 import uuid
-from dataclasses import dataclass, field, InitVar
+from dataclasses import InitVar, dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal
 
 from faker import Faker
 
-from settings import DEFAULT_CUSTOMER_NAME
-from faker_custom_provider import CustomProvider
 from db import PostgreSQLClient
-
+from faker_custom_provider import CustomProvider
+from settings import DEFAULT_CUSTOMER_NAME
 
 faker = Faker()
 faker.add_provider(CustomProvider)
@@ -18,6 +16,8 @@ faker.add_provider(CustomProvider)
 @dataclass
 class Ticket:
     db_client: InitVar[PostgreSQLClient | None] = None
+    datetime_for_create: InitVar[datetime | None] = None
+
     id: str = None
     department: str = field(default_factory=lambda: str(faker.random_number(digits=18)))
     department_name: str = field(default_factory=lambda: faker.department_name())
@@ -37,7 +37,7 @@ class Ticket:
         default_factory=lambda: str(faker.random_number(digits=18))
     )
     ticket_owner_name: str = field(default_factory=lambda: faker.name())
-    created_time: datetime = field(default_factory=lambda: datetime.utcnow())
+    created_time: datetime = None
     product_id: str = field(default_factory=lambda: str(faker.random_number(digits=18)))
     modified_time: datetime = field(
         default_factory=lambda: faker.date_time_this_month(
@@ -190,7 +190,7 @@ class Ticket:
         default_factory=lambda: faker.associated_indicators_of_compromise()
     )
     critical_asset: str = field(default_factory=lambda: faker.yes_no())
-    ticket_create_time: datetime = field(default_factory=lambda: datetime.utcnow())
+    ticket_create_time: datetime = None
     incident_summary: str = None
     recommended_remediation_actions: str = field(
         default_factory=lambda: faker.recommended_remediation_actions()
@@ -210,20 +210,24 @@ class Ticket:
         default_factory=lambda: faker.ticket_final_outcome_result()
     )
 
-    def __post_init__(self, db_client):
+    def __post_init__(self, db_client, datetime_for_create):
         latest_ticket_id = db_client.get_latest_ticket_id()
         self.id = str(
             faker.random_int(
-                min=latest_ticket_id + 1000000, max=latest_ticket_id + 10000000
+                min=latest_ticket_id + 100000000, max=latest_ticket_id + 1000000000
             )
         )
+        self.created_time = datetime_for_create
+        self.ticket_create_time = datetime_for_create
 
 
 @dataclass
 class AlertStat:
+    datetime_for_create: InitVar[datetime | None] = None
+
     tracking_id: str = field(default_factory=lambda: uuid.uuid4().hex)
     case_id: int = field(default_factory=lambda: faker.random_number(digits=8))
-    case_created_on: datetime = field(default_factory=lambda: datetime.utcnow())
+    case_created_on: datetime = None
     case_source: str = field(default_factory=lambda: faker.case_source())
     customer: str = DEFAULT_CUSTOMER_NAME
     case_closed_on: datetime = field(
@@ -240,11 +244,7 @@ class AlertStat:
     )
     case_status: str = field(default_factory=lambda: faker.case_status())
     username: str = field(default_factory=lambda: faker.user_name())
-    alert_received_on: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            before_now=True, tzinfo=timezone.utc
-        )
-    )
+    alert_received_on: datetime = None
     sla_minutes: int = field(default_factory=lambda: faker.random_int(min=0, max=99999))
     zoho_ticket_number: str = field(
         default_factory=lambda: str(faker.random_number(digits=6))
@@ -256,7 +256,7 @@ class AlertStat:
         default_factory=lambda: faker.closure_reason()
     )
     case_current_owner: str = "Administrator"
-    zoho_created_time: datetime = field(default_factory=lambda: datetime.utcnow())
+    zoho_created_time: datetime = None
     category: str = None
     sub_category: str = None
     ti_reputation: str = field(default_factory=lambda: faker.ti_reputation())
@@ -348,6 +348,11 @@ class AlertStat:
     xdr_ids_severity: str = field(default_factory=lambda: faker.severity())
     xdr_ids_signature: str = field(default_factory=lambda: faker.xdr_ids_signature())
     xdr_login_type: str = field(default_factory=lambda: faker.xdr_login_type())
+
+    def __post_init__(self, datetime_for_create):
+        self.case_created_on = datetime_for_create
+        self.alert_received_on = datetime_for_create
+        self.zoho_created_time = datetime_for_create
 
 
 @dataclass
