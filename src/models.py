@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import InitVar, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 from faker import Faker
@@ -47,11 +47,15 @@ class Ticket:
     request_id: str = field(
         default_factory=lambda: str(faker.random_int(min=0, max=9999))
     )
-    due_date: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
+    due_date: datetime = None
+    priority: str = field(default_factory=lambda: faker.priority())
+    channel: str = field(default_factory=lambda: faker.channel())
+    to_address: str = field(default_factory=lambda: faker.email())
+    customer_response_time: datetime = None
+    number_of_threads: int = field(
+        default_factory=lambda: faker.random_int(min=0, max=999)
     )
+    category: str = field(default_factory=lambda: faker.category())
     sub_category: str = field(default_factory=lambda: faker.sub_category())
     is_escalated: str = field(default_factory=lambda: faker.yes_no())
     created_by: str = field(default_factory=lambda: str(faker.random_number(digits=18)))
@@ -61,11 +65,7 @@ class Ticket:
             after_now=True, tzinfo=timezone.utc
         )
     )
-    ticket_closed_time: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    ticket_closed_time: datetime = None
     modified_by: str = field(
         default_factory=lambda: str(faker.random_number(digits=18))
     )
@@ -74,23 +74,11 @@ class Ticket:
             after_now=True, tzinfo=timezone.utc
         )
     )
-    assigned_time: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
-    first_assigned_time: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    assigned_time: datetime = None
+    first_assigned_time: datetime = None
     resolution: str = field(default_factory=lambda: faker.resolution())
     happiness_rating: str = field(default_factory=lambda: faker.happiness_rating())
-    agent_responded_time: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    agent_responded_time: datetime = None
     number_of_comments: int = field(
         default_factory=lambda: faker.random_int(min=0, max=99)
     )
@@ -165,11 +153,7 @@ class Ticket:
             variable_nb_words=False,
         )
     )
-    time_to_respond: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    time_to_respond: datetime = None
     sla_name: str = field(default_factory=lambda: faker.sla_name())
     sla_violation_type: str = field(default_factory=lambda: faker.sla_violation_type())
     cyflare_incident_notification: str = field(
@@ -180,11 +164,7 @@ class Ticket:
         default_factory=lambda: faker.ipv4()
     )
     incident_severity: str = field(default_factory=lambda: faker.severity())
-    time_of_security_incident: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            before_now=True, tzinfo=timezone.utc
-        )
-    )
+    time_of_security_incident: datetime = None
     related_resources: str = field(default_factory=lambda: faker.url())
     associated_indicators_of_compromise: str = field(
         default_factory=lambda: faker.associated_indicators_of_compromise()
@@ -217,8 +197,30 @@ class Ticket:
                 min=latest_ticket_id + 100000000, max=latest_ticket_id + 1000000000
             )
         )
-        self.created_time = datetime_for_create
-        self.ticket_create_time = datetime_for_create
+
+        self.created_time = datetime_for_create - timedelta(
+            minutes=faker.random_int(1, 120)
+        )
+        self.time_of_security_incident = self.created_time - timedelta(
+            minutes=faker.random_int(1, 120)
+        )
+        self.ticket_create_time = self.created_time
+        self.assigned_time = self.created_time + timedelta(
+            minutes=faker.random_int(1, 120)
+        )
+        self.first_assigned_time = self.assigned_time
+        self.time_to_respond = self.assigned_time
+        self.agent_responded_time = self.assigned_time + timedelta(
+            minutes=faker.random_int(1, 30)
+        )
+        self.customer_response_time = self.agent_responded_time + timedelta(
+            minutes=faker.random_int(1, 60)
+        )
+
+        self.due_date = self.created_time + timedelta(hours=faker.random_int(1, 60))
+        self.ticket_closed_time = self.created_time + timedelta(
+            hours=faker.random_int(1, 60)
+        )
 
 
 @dataclass
@@ -230,11 +232,7 @@ class AlertStat:
     case_created_on: datetime = None
     case_source: str = field(default_factory=lambda: faker.case_source())
     customer: str = DEFAULT_CUSTOMER_NAME
-    case_closed_on: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    case_closed_on: datetime = None
     event_name: str = field(default_factory=lambda: faker.event_name())
     case_severity: str = field(default_factory=lambda: faker.severity())
     closure_reason: str = field(default_factory=lambda: faker.closure_reason())
@@ -243,7 +241,7 @@ class AlertStat:
         default_factory=lambda: faker.random_int(min=0, max=99999)
     )
     case_status: str = field(default_factory=lambda: faker.case_status())
-    username: str = field(default_factory=lambda: faker.user_name())
+    username: str = field(default_factory=lambda: faker.username())
     alert_received_on: datetime = None
     sla_minutes: int = field(default_factory=lambda: faker.random_int(min=0, max=99999))
     zoho_ticket_number: str = field(
@@ -263,11 +261,7 @@ class AlertStat:
     case_tag: str = field(default_factory=lambda: faker.case_tag())
     sip_reputation: str = field(default_factory=lambda: faker.sip_dip_reputation())
     dip_reputation: str = field(default_factory=lambda: faker.sip_dip_reputation())
-    case_responded_on: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    case_responded_on: datetime = None
     case_closed_by: str = "Administrator"
     destination_ip_type: str = field(default_factory=lambda: faker.ip_type())
     source_ip_type: str = field(default_factory=lambda: faker.ip_type())
@@ -277,16 +271,14 @@ class AlertStat:
     case_time_worked: str = field(
         default_factory=lambda: faker.time(pattern="%-H:%M:%S.%f")
     )
-    source_ip_region: str = field(default_factory=lambda: faker.state())
-    destination_ip_region: str = field(default_factory=lambda: faker.state())
+    source_ip_region: str = None
+    destination_ip_region: str = None
     source_ip_city: str = None
     destination_ip_city: str = None
-    source_ip_latitude: str = field(default_factory=lambda: str(faker.latitude()))
-    destination_ip_latitude: str = field(default_factory=lambda: str(faker.latitude()))
-    source_ip_longitude: str = field(default_factory=lambda: str(faker.longitude()))
-    destination_ip_longitude: str = field(
-        default_factory=lambda: str(faker.longitude())
-    )
+    source_ip_latitude: str = None
+    destination_ip_latitude: str = None
+    source_ip_longitude: str = None
+    destination_ip_longitude: str = None
     mitre_technique_name: str = field(
         default_factory=lambda: faker.mitre_technique_name()
     )
@@ -298,24 +290,18 @@ class AlertStat:
     mitre_sub_technique_id: str = None
     mitre_tactic_id: str = field(default_factory=lambda: faker.mitre_tactic_id())
     last_escalated_tier: str = None
-    event_occurred_on: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            before_now=True, tzinfo=timezone.utc
-        )
-    )
+    event_occurred_on: datetime = None
     case_tt_claimed: str = None
     case_tt_closed: str = None
-    source_ip: str = field(default_factory=lambda: faker.ipv4())
-    destination_ip: str = field(default_factory=lambda: faker.ipv4())
+    source_ip: str = field(default_factory=lambda: faker.ip_address())
+    destination_ip: str = field(default_factory=lambda: faker.ip_address())
     indicators: str = field(default_factory=lambda: faker.ipv4())
     case_tt_claimed_min: int = None
     case_tt_closed_min: int = field(
         default_factory=lambda: faker.random_int(min=0, max=9999)
     )
-    source_ip_country_code: str = field(default_factory=lambda: faker.country_code())
-    destination_ip_country_code: str = field(
-        default_factory=lambda: faker.country_code()
-    )
+    source_ip_country_code: str = faker.country_code()
+    destination_ip_country_code: str = faker.country_code()
     endpoint_name: str = field(default_factory=lambda: faker.hostname())
     s1_site_name: str = field(default_factory=lambda: faker.s1_site_name())
     s1_group_name: str = None
@@ -350,9 +336,38 @@ class AlertStat:
     xdr_login_type: str = field(default_factory=lambda: faker.xdr_login_type())
 
     def __post_init__(self, datetime_for_create):
-        self.case_created_on = datetime_for_create
-        self.alert_received_on = datetime_for_create
-        self.zoho_created_time = datetime_for_create
+        self.case_created_on = datetime_for_create - timedelta(
+            minutes=faker.random_int(1, 120)
+        )
+        self.alert_received_on = self.case_created_on - timedelta(
+            minutes=faker.random_int(1, 30)
+        )
+        self.zoho_created_time = self.case_created_on
+        self.event_occurred_on = self.alert_received_on - timedelta(
+            minutes=faker.random_int(1, 30)
+        )
+        self.case_responded_on = self.case_created_on + timedelta(
+            minutes=faker.random_int(1, 120)
+        )
+        self.case_closed_on = self.case_created_on + timedelta(
+            hours=faker.random_int(1, 60)
+        )
+
+        (
+            self.source_ip_latitude,
+            self.source_ip_longitude,
+            self.source_ip_region,
+            self.source_ip_country_code,
+            ignore,
+        ) = faker.local_latlng(self.source_ip_country_code)
+
+        (
+            self.destination_ip_latitude,
+            self.destination_ip_longitude,
+            self.destination_ip_region,
+            self.destination_ip_country_code,
+            ignore,
+        ) = faker.local_latlng(self.destination_ip_country_code)
 
 
 @dataclass

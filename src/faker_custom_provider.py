@@ -1,5 +1,4 @@
 import random
-from random import choice
 
 from faker.providers import BaseProvider
 
@@ -38,6 +37,62 @@ class CustomProvider(BaseProvider):
         "attacker",
     ]
 
+    def username(self):
+        return random.choice(
+            [
+                "4i486ily",
+                "kqwa0ssn",
+                "l7j4ous0",
+                "b6z2jzqc",
+                "p8zfr4v4",
+                "6wlv59y5",
+                "bxikma3p",
+                "bl7p6ew2",
+                "6p6reiy3",
+                "gt8vxo99",
+                "zi0mvs6u",
+                "8c49uwls",
+                "u3omf61f",
+                "k2shnsnm",
+                "j0wr5856",
+                "ptolucu1",
+                "u4dkaisu",
+                "gmchqidj",
+                "k1ul856j",
+                "t9ebx1g0",
+                "teuppgg4",
+                "m8e8wiaa",
+                "uwwzw93n",
+                "p390b7dn",
+                "rtp6cjlb",
+                "bcamj1q2",
+                "22beuv1i",
+                "09evwf6c",
+                "tybhle1u",
+                "9dhh0uhd",
+                "pxey5r1n",
+                "ob0pza99",
+                "l1fbhs07",
+                "ff7xz6eu",
+                "nh6xr9m3",
+                "vw1bouxe",
+                "kirc5gs4",
+                "to1giywf",
+                "wr8coajr",
+                "62qsjfht",
+                "ltkjhden",
+                "vru1zlgb",
+                "5s37729v",
+                "t32jwttr",
+                "q47n6iul",
+                "96akipom",
+                "szkckay2",
+                "0p2poozw",
+                "60j68f9x",
+                "k92x9syk",
+            ]
+        )
+
     def department_name(self):
         return random.choice(
             [
@@ -54,33 +109,38 @@ class CustomProvider(BaseProvider):
                 "Tech Ops",
                 "SOC Platform Management",
                 "Deployments",
+                "SOC Incidents",
             ]
         )
 
     def ticket_status(self):
         return random.choice(
             [
-                "On Hold",
-                "Closed",
-                "Client Closed Ticket",
-                "Closed - Client Authorized or Benign Activity",
-                "Confirmed Incident - Credentials Exposed",
-                "Closed - At Clients Request - Final Outcome Unknown",
+                "FP - Inaccurate IP Location",
+                "TP - Malicious Connection",
+                "TP - Whitelisted",
                 "Awaiting SOC Reply",
-                "Confirmed Incident - Configuration Error",
+                "FP - Solution Tuning Implemented",
+                "UK - Ticket Closed Due to No-Reply",
                 "Awaiting Customer Reply",
-                "Closed - Confirmed Incident",
-                "Closed - Request Completed",
-                "Open",
-                "Approved - Confirmed False Positive",
-                "Ticket Closed Due to No-Reply",
-                "False Positive - Normal Activity",
-                "In Review",
-                "Delivered to Client",
-                "Unknown - Auto closed",
-                "Confirmed Incident - Malware",
-                "In Progress",
-                "Shipped",
+                "TP - Client Allowed Activity",
+                "TP - Solution Tuning Implemented",
+                "TP - Confirmed Incident",
+                "TP - Pen Testing Activity Complete",
+                "TP - Malicious Intent",
+                "FP - Normal Behavior",
+                "UK - Auto Closure - No Response from Client",
+                "On Hold - Awaiting Vendor Support",
+                "FP - Inaccurate Detection",
+                "UK - Approved to Close - Unknown Outcome",
+                "UK - Client Closed Ticket",
+                "TP - Blacklisted",
+                "CI - Credentials Exposed",
+                "TP - Low Priority Incident",
+                "FP - Not Malicious",
+                "UK - Duplicate Alarm",
+                "FP - Confirmed FP by Client",
+                "TP - No Action Needed",
             ]
         )
 
@@ -1303,3 +1363,62 @@ class CustomProvider(BaseProvider):
                 "win_unlock_log",
             ]
         )
+
+    def ip_address(self):
+        return random.choice(
+            [
+                "52.218.50.65",
+                "101.129.203.107",
+                "253.93.85.39",
+                "109.109.26.186",
+                "246.191.87.140",
+                "174.60.217.104",
+                "24.131.131.120",
+                "23.146.62.209",
+                "110.112.143.106",
+                "218.210.238.179",
+                "20.117.227.251",
+                "26.57.49.54",
+                "0.95.144.115",
+                "156.72.37.122",
+                "47.48.162.142",
+                "61.106.21.174",
+                "74.40.31.180",
+                "25.213.164.51",
+                "121.23.57.82",
+                "65.38.135.121",
+                "197.38.153.136",
+                "255.216.217.222",
+                "1.82.101.252",
+                "30.7.34.63",
+                "176.138.71.24",
+                "179.21.105.193",
+                "205.114.82.111",
+                "181.84.222.183",
+                "126.95.205.82",
+                "179.152.128.174",
+                "210.236.6.5",
+                "21.3.56.190",
+                "241.90.157.247",
+                "169.113.132.51",
+                "4.191.104.222",
+                "197.0.221.158",
+                "222.80.118.36",
+                "49.137.111.207",
+                "169.0.206.24",
+                "195.196.132.189",
+                "210.83.35.173",
+                "92.75.23.13",
+                "166.242.28.226",
+                "104.204.165.204",
+                "106.254.7.126",
+                "57.220.215.234",
+                "102.197.228.9",
+                "108.236.45.196",
+                "85.242.215.218",
+                "184.198.151.239",
+            ]
+        )
+
+    def country_code(self):
+        return random.choice(["US", "AU", "CN", "ET", "FR", "IN", "PK", "RU"])
