@@ -219,7 +219,7 @@ class Ticket:
 
         self.due_date = self.created_time + timedelta(hours=faker.random_int(1, 60))
         self.ticket_closed_time = self.created_time + timedelta(
-            hours=faker.random_int(1, 60)
+            hours=faker.random_int(1, 100)
         )
 
 
@@ -350,7 +350,7 @@ class AlertStat:
             minutes=faker.random_int(1, 120)
         )
         self.case_closed_on = self.case_created_on + timedelta(
-            hours=faker.random_int(1, 60)
+            hours=faker.random_int(1, 100)
         )
 
         (

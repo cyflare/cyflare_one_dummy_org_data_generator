@@ -63,7 +63,9 @@ class Generator:
             extra = {}
         logger.info(
             "Generating {} elements for {} on {}".format(
-                number_of_elements, model.__name__, extra.get("datetime_for_create")
+                number_of_elements,
+                model.__name__,
+                extra.get("datetime_for_create").date(),
             )
         )
         data = []

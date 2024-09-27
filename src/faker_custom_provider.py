@@ -116,6 +116,7 @@ class CustomProvider(BaseProvider):
     def ticket_status(self):
         return random.choice(
             [
+                None,
                 "FP - Inaccurate IP Location",
                 "TP - Malicious Connection",
                 "TP - Whitelisted",
@@ -141,6 +142,7 @@ class CustomProvider(BaseProvider):
                 "UK - Duplicate Alarm",
                 "FP - Confirmed FP by Client",
                 "TP - No Action Needed",
+                "Closed",
             ]
         )
 
