@@ -22,6 +22,8 @@ class ExcludeErrorFilter(logging.Filter):
         return record.levelno < logging.ERROR
 
 
+os.makedirs(PROJECT_DIR / "logs", exist_ok=True)
+
 dictConfig(
     {
         "version": 1,
