@@ -130,13 +130,16 @@ class CustomProvider(BaseProvider):
                 "FP - Confirmed FP by Client",
                 "TP - No Action Needed",
                 "Closed",
+                "Awaiting Response From CyFlare Team Member",
+                "Open",
+                "In Progress",
             ]
         )
 
     def priority(self):
         return random.choice(
             [
-                 "Medium",
+                "Medium",
                 "Low",
                 "High",
                 "Informative",
@@ -206,7 +209,7 @@ class CustomProvider(BaseProvider):
     def classifications(self):
         return random.choice(
             [
-               "Security Incident",
+                "Security Incident",
             ]
         )
 
@@ -313,9 +316,7 @@ class CustomProvider(BaseProvider):
         return random.choice(["Incident 1", None])
 
     def severity(self):
-        return random.choice(
-            ["High", "Low", "Medium", "Critical", "Informative"]
-        )
+        return random.choice(["High", "Low", "Medium", "Critical", "Informative"])
 
     def associated_indicators_of_compromise(self):
         return random.choice(
@@ -471,7 +472,7 @@ class CustomProvider(BaseProvider):
     def ticket_source(self):
         return random.choice(
             [
-                 "None",
+                "None",
                 "Microsoft Defender",
                 "Recorded Future",
                 "Proofpoint Essentials",
@@ -489,7 +490,7 @@ class CustomProvider(BaseProvider):
                 "Azure Sentinel",
                 "Stellar Sensor Down",
                 "CheckPoint",
-                'CrowdStrike',
+                "CrowdStrike",
             ]
         )
 
@@ -584,7 +585,7 @@ class CustomProvider(BaseProvider):
 
     def sip_dip_reputation(self):
         return random.choice(
-         [
+            [
                 "Blackhole",
                 "Bot",
                 "Brute_Forcer",
@@ -596,7 +597,7 @@ class CustomProvider(BaseProvider):
                 "emerging_threat",
                 "Good",
                 "Malicious",
-                "Mobile_CnC", 
+                "Mobile_CnC",
                 "Malware",
                 "Phishing",
                 "Scanner",
@@ -611,7 +612,7 @@ class CustomProvider(BaseProvider):
     def mitre_technique_name(self):
         return random.choice(
             [
-                 "Abuse Elevation Control Mechanism",
+                "Abuse Elevation Control Mechanism",
                 "Accessibility Features",
                 "Access Token Manipulation",
                 "Account Access Removal",
@@ -674,7 +675,7 @@ class CustomProvider(BaseProvider):
     def mitre_tactic(self):
         return random.choice(
             [
-                     "Collection",
+                "Collection",
                 "Command and Control",
                 "Credential Access",
                 "Defense Evasion",
@@ -1023,7 +1024,7 @@ class CustomProvider(BaseProvider):
     def xdr_ids_signature(self):
         return random.choice(
             [
-               "Anti-Spyware Prevention Alert",
+                "Anti-Spyware Prevention Alert",
                 "ATTACK_RESPONSE Metasploit",
                 "ATTACK_RESPONSE Net User Command Response",
                 "CINS Active Threat Intelligence Poor Reputation IP group 1",
@@ -1163,5 +1164,5 @@ class CustomProvider(BaseProvider):
             ]
         )
 
-    def country_code(self):
+    def custom_country_code(self):
         return random.choice(["US", "AU", "CN", "ET", "FR", "IN", "PK", "RU"])

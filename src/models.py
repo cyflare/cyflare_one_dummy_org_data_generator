@@ -39,11 +39,7 @@ class Ticket:
     ticket_owner_name: str = field(default_factory=lambda: faker.name())
     created_time: datetime = None
     product_id: str = field(default_factory=lambda: str(faker.random_number(digits=18)))
-    modified_time: datetime = field(
-        default_factory=lambda: faker.date_time_this_month(
-            after_now=True, tzinfo=timezone.utc
-        )
-    )
+    modified_time: datetime = None
     request_id: str = field(
         default_factory=lambda: str(faker.random_int(min=0, max=9999))
     )
@@ -219,8 +215,9 @@ class Ticket:
 
         self.due_date = self.created_time + timedelta(hours=faker.random_int(1, 60))
         self.ticket_closed_time = self.created_time + timedelta(
-            hours=faker.random_int(1, 100)
+            hours=faker.random_int(1, 15)
         )
+        self.modified_time = self.ticket_closed_time
 
 
 @dataclass
@@ -300,8 +297,12 @@ class AlertStat:
     case_tt_closed_min: int = field(
         default_factory=lambda: faker.random_int(min=0, max=9999)
     )
-    source_ip_country_code: str = faker.country_code()
-    destination_ip_country_code: str = faker.country_code()
+    source_ip_country_code: str = field(
+        default_factory=lambda: faker.custom_country_code()
+    )
+    destination_ip_country_code: str = field(
+        default_factory=lambda: faker.custom_country_code()
+    )
     endpoint_name: str = field(default_factory=lambda: faker.hostname())
     s1_site_name: str = field(default_factory=lambda: faker.s1_site_name())
     s1_group_name: str = None
@@ -350,7 +351,7 @@ class AlertStat:
             minutes=faker.random_int(1, 120)
         )
         self.case_closed_on = self.case_created_on + timedelta(
-            hours=faker.random_int(1, 100)
+            hours=faker.random_int(1, 15)
         )
 
         (
