@@ -104,11 +104,9 @@ class CustomProvider(BaseProvider):
         return random.choice(
             [
                 None,
-                "FP - Inaccurate IP Location",
                 "TP - Malicious Connection",
                 "TP - Whitelisted",
                 "Awaiting SOC Reply",
-                "FP - Solution Tuning Implemented",
                 "UK - Ticket Closed Due to No-Reply",
                 "Awaiting Customer Reply",
                 "TP - Client Allowed Activity",
@@ -116,18 +114,11 @@ class CustomProvider(BaseProvider):
                 "TP - Confirmed Incident",
                 "TP - Pen Testing Activity Complete",
                 "TP - Malicious Intent",
-                "FP - Normal Behavior",
-                "UK - Auto Closure - No Response from Client",
                 "On Hold - Awaiting Vendor Support",
-                "FP - Inaccurate Detection",
-                "UK - Approved to Close - Unknown Outcome",
-                "UK - Client Closed Ticket",
                 "TP - Blacklisted",
                 "CI - Credentials Exposed",
                 "TP - Low Priority Incident",
                 "FP - Not Malicious",
-                "UK - Duplicate Alarm",
-                "FP - Confirmed FP by Client",
                 "TP - No Action Needed",
                 "Closed",
                 "Awaiting Response From CyFlare Team Member",
@@ -305,10 +296,7 @@ class CustomProvider(BaseProvider):
     def sla_violation_type(self):
         return random.choice(
             [
-                "Response and Resolution Violation",
-                "Resolution Violation",
                 "Not Violated",
-                "Response Violation",
             ]
         )
 
